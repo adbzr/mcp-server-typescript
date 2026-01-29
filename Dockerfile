@@ -1,11 +1,21 @@
 FROM node:20
+
 WORKDIR /app
-# On copie TOUT le code source (src, package.json, etc.)
+
+# On copie tout le projet
 COPY . .
-# Installation des dépendances définies dans ton package.json
+
+# Installation et build
 RUN npm install
-# Compilation du TypeScript vers le dossier /dist
 RUN npm run build
+
+# PETIT TEST : Cette ligne va afficher dans tes logs de build 
+# exactement où se trouvent les fichiers, pour qu'on soit sûrs.
+RUN ls -R dist
+
 EXPOSE 3000
-# On lance le serveur compilé avec les flags SSE pour n8n
-CMD ["node", "dist/index.js", "--sse", "--port", "3000"]
+
+# On utilise "npm start" au lieu de "node dist/index.js"
+# car le package.json de DataForSEO contient déjà le bon chemin.
+# On passe les arguments après le "--"
+CMD ["npm", "start", "--", "--sse", "--port", "3000"]
